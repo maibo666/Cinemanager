@@ -29,7 +29,7 @@ public class OrderFactory {
         return instance;
     }
 
-    public List<Order> get(){
+    public Order get(){
         return repository.get();
     }
 

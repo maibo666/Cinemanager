@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.Window;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -16,9 +15,11 @@ import androidx.fragment.app.FragmentTransaction;
 import net.lzzy.cinemanager.R;
 import net.lzzy.cinemanager.fragments.AddCinemasFragment;
 import net.lzzy.cinemanager.fragments.AddOrdersFragment;
+import net.lzzy.cinemanager.fragments.BaseFragment;
 import net.lzzy.cinemanager.fragments.CinemasFragment;
 import net.lzzy.cinemanager.fragments.OrdersFragment;
 import net.lzzy.cinemanager.models.Cinema;
+import net.lzzy.cinemanager.utils.ViewUtils;
 
 /**
  * @author Administrator
@@ -26,11 +27,12 @@ import net.lzzy.cinemanager.models.Cinema;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         AddCinemasFragment.OnFragmentInteractionListener,AddCinemasFragment.OnCinemaCreatedListener{
     private FragmentManager manager=getSupportFragmentManager();
-    private LinearLayout layoutMenu;
+    private View layoutMenu;
     private TextView tvTitle;
     private SearchView search;
     private SparseArray<String> titleArray=new SparseArray<>();
     private SparseArray<Fragment> fragmentArray = new SparseArray<>();
+    public static final String EXTRA_CINEMA_ID = "cinemaId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         setTitleMenu();
+        search.setOnQueryTextListener(new ViewUtils.AbstractQueryHandler() {
+            @Override
+            public boolean handleQuery(String kw) {
+               Fragment fragment = manager.findFragmentById(R.id.fragment_container);
+               if(fragment!=null){
+                   if (fragment instanceof BaseFragment){
+                       ((BaseFragment)fragment).search(kw);
+                   }
+               }
+               return true;
+            }
+        });
     }
 
     private void setTitleMenu() {

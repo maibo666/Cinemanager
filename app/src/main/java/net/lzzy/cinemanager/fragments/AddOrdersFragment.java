@@ -4,7 +4,7 @@ package net.lzzy.cinemanager.fragments;
 import android.content.Context;
 
 import net.lzzy.cinemanager.R;
-import net.lzzy.cinemanager.models.Cinema;
+import net.lzzy.cinemanager.models.Order;
 
 /**
  *
@@ -53,6 +53,6 @@ public class AddOrdersFragment extends BaseFragment {
          * 取消保存
          */
         void cancelAddCinema();
-        void saveCinema(Cinema cinema);
+        void saveCinema(Order order);
     }
 }
