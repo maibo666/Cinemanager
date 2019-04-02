@@ -9,11 +9,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:background="@color/activity_bg"
         android:gravity="center"
         android:text="注册新影院"
-        android:textColor="@color/bank_bg01"
+        android:layout_marginStart="10dp"
+        android:background="@color/color4"
+        android:textColor="@android:color/black"
         android:textSize="30sp" />
     <LinearLayout
         android:layout_width="wrap_content"

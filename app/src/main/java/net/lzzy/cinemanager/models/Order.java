@@ -4,8 +4,6 @@ import net.lzzy.sqllib.Ignored;
 import net.lzzy.sqllib.Sqlitable;
 import net.lzzy.sqllib.Table;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -13,7 +11,7 @@ import java.util.UUID;
  * Description:
  */
 @Table(name = "Orders")
-public class Order extends BaseEntity implements Sqlitable, Collection<Order> {
+public class Order extends BaseEntity implements Sqlitable {
     @Ignored
     static final String COL_MOVIE = "movie";
     @Ignored
@@ -26,6 +24,16 @@ public class Order extends BaseEntity implements Sqlitable, Collection<Order> {
     private String movieTime;
     private float price;
     private UUID cinemaId;
+
+    public Order(){}
+
+    public Order(String movie,String movieTime,float price,UUID cinemaId){
+        super();
+        this.movie=movie;
+        this.movieTime=movieTime;
+        this.price=price;
+        this.cinemaId=cinemaId;
+    }
 
     public String getMovie() {
         return movie;
@@ -62,70 +70,5 @@ public class Order extends BaseEntity implements Sqlitable, Collection<Order> {
     @Override
     public boolean needUpdate() {
         return false;
-    }
-
-    @Override
-    public int size() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return false;
-    }
-
-    @Override
-    public Iterator<Order> iterator() {
-        return null;
-    }
-
-    @Override
-    public Object[] toArray() {
-        return new Object[0];
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        return null;
-    }
-
-    @Override
-    public boolean add(Order order) {
-        return false;
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        return false;
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        return false;
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends Order> c) {
-        return false;
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        return false;
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        return false;
-    }
-
-    @Override
-    public void clear() {
-
     }
 }

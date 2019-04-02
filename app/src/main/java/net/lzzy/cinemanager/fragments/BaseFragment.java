@@ -48,7 +48,7 @@ public abstract class BaseFragment extends Fragment {
         return Objects.requireNonNull(getView()).findViewById(id);
     }
 
+    public abstract void search(String kw);
 
-    public void search(String kw) {
-    }
+
 }

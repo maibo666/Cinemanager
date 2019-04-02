@@ -4,9 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="订单列表"
-        android:textSize="18sp" />
+    <include layout="@layout/fragment_orders_content"/>
+
 </LinearLayout>
