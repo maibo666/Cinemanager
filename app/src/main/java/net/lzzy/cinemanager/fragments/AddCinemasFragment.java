@@ -6,8 +6,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-
 import com.lljjcoder.Interface.OnCityItemClickListener;
 import com.lljjcoder.bean.CityBean;
 import com.lljjcoder.bean.DistrictBean;
@@ -67,7 +65,7 @@ public class AddCinemasFragment extends BaseFragment {
 
     private void showDialog() {
         find(R.id.dialog_add_cinema_btn_cancel).setOnClickListener(v -> {
-            cinemaListener.cancelAddCinema();
+                cinemaListener.cancelAddCinema();
         });
 
         find(R.id.dialog_add_cinema_layout_area).setOnClickListener(v -> {

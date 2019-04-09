@@ -5,14 +5,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
-
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import net.lzzy.cinemanager.R;
 import net.lzzy.cinemanager.models.Cinema;
@@ -21,7 +19,6 @@ import net.lzzy.cinemanager.models.Order;
 import net.lzzy.cinemanager.models.OrderFactory;
 import net.lzzy.cinemanager.utils.AppUtils;
 import net.lzzy.simpledatepicker.CustomDatePicker;
-
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,7 +32,7 @@ import java.util.Locale;
  * @date 2019/3/27
  * Description:
  */
-public class AddOrdersFragment extends BaseFragment{
+public class AddOrdersFragment extends BaseFragment {
     /** 3.声明接口对象**/
     private OnFragmentInteractionListener listener;
     private OnOrderCreatedListener orderlistener;
@@ -46,7 +43,7 @@ public class AddOrdersFragment extends BaseFragment{
     private CustomDatePicker datePicker;
     private ArrayAdapter<Cinema> adapter;
     private List<Cinema> cinemas;
-    private OrderFactory factory=OrderFactory.getInstance();
+    private OrderFactory factory= OrderFactory.getInstance();
     private List<Order> orders;
     private ImageView imgQRCode;
 
@@ -110,7 +107,7 @@ public class AddOrdersFragment extends BaseFragment{
 
         imgQRCode.setOnLongClickListener(v -> {
             Bitmap bitmap=((BitmapDrawable)imgQRCode.getDrawable()).getBitmap();
-            Toast.makeText(getActivity(),AppUtils.readQRCode(bitmap),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), AppUtils.readQRCode(bitmap),Toast.LENGTH_SHORT).show();
             return true;
         });
 

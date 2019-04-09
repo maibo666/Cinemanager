@@ -1,8 +1,13 @@
 package net.lzzy.cinemanager.fragments;
 
+import android.content.Context;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.annotation.Nullable;
 
 import net.lzzy.cinemanager.R;
 import net.lzzy.cinemanager.models.Cinema;
@@ -20,17 +25,30 @@ import java.util.List;
 /**
  * @author 2  创建Fragment类 **/
 public class CinemasFragment extends BaseFragment {
-
+    public static final String ARGS_CINEMA = "cinema";
+    private OnCinemaSelectedListener listener;
     private List<Cinema> cinemas;
     private ListView lv;
-    private CinemaFactory factory=CinemaFactory.getInstance();
+    private CinemaFactory factory= CinemaFactory.getInstance();
     private GenericAdapter<Cinema> adapter;
     private Cinema cinema;
 
-    public CinemasFragment(){}
-
-    public CinemasFragment(Cinema cinema){
-        this.cinema=cinema;
+    /** 静态方法传参数 **/
+    public static CinemasFragment newInstance(Cinema cinema){
+        CinemasFragment fragment=new CinemasFragment();
+        Bundle args=new Bundle();
+        args.putParcelable(ARGS_CINEMA,cinema);
+        fragment.setArguments(args);
+        return fragment;
+    }
+    /** 读取静态方法所传的数据 **/
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments()!=null){
+            Cinema cinema=getArguments().getParcelable(ARGS_CINEMA);
+            this.cinema=cinema;
+        }
     }
 
     @Override
@@ -40,7 +58,7 @@ public class CinemasFragment extends BaseFragment {
         View empty=find(R.id.activity_cinemas_tv_none);
         lv.setEmptyView(empty);
         cinemas=factory.get();
-        adapter = new GenericAdapter<Cinema>(getActivity(),R.layout.cinemas_item,cinemas) {
+        adapter = new GenericAdapter<Cinema>(getActivity(), R.layout.cinemas_item,cinemas) {
             @Override
             public void populate(ViewHolder viewHolder, Cinema cinema) {
                 viewHolder.setTextView(R.id.cinemas_items_name,cinema.getName())
@@ -58,6 +76,12 @@ public class CinemasFragment extends BaseFragment {
             }
         };
         lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    listener.onCinemaSelected(adapter.getItem(position).getId().toString());
+            }
+        });
 
         if (cinema!=null){
             save(cinema);
@@ -86,5 +110,23 @@ public class CinemasFragment extends BaseFragment {
         adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            listener= (OnCinemaSelectedListener) context;
+        }catch (ClassCastException e){
+            throw new ClassCastException(context.toString()+"必须实现OnCinemaSelectedListener接口");
+        }
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener=null;
+    }
+
+    public interface OnCinemaSelectedListener {
+        void onCinemaSelected(String cinemaId);
+    }
 }
