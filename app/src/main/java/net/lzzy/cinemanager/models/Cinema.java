@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import net.lzzy.sqllib.Ignored;
 import net.lzzy.sqllib.Sqlitable;
 
+import java.io.Serializable;
+
 /**
  * Created by lzzy_gxy on 2019/3/11.
  * Description:
@@ -18,15 +20,15 @@ public class Cinema extends BaseEntity implements Sqlitable, Parcelable {
     private String province;
     private String city;
     private String area;
+    public Cinema() {
+    }
 
-    public Cinema(){}
-    public Cinema(String name,String location,String province,String city,String area){
-        super();
-        this.name=name;
-        this.location=location;
-        this.province=province;
-        this.city=city;
-        this.area=area;
+    public Cinema(String name, String location, String province, String city, String area) {
+        this.name = name;
+        this.location = location;
+        this.province = province;
+        this.city = city;
+        this.area = area;
     }
 
     protected Cinema(Parcel in) {
@@ -36,7 +38,7 @@ public class Cinema extends BaseEntity implements Sqlitable, Parcelable {
         city = in.readString();
         area = in.readString();
     }
-    /** 该字段，不需要持久化，必须加注解 **/
+
     @Ignored
     public static final Creator<Cinema> CREATOR = new Creator<Cinema>() {
         @Override

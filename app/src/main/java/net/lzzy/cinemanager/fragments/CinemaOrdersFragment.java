@@ -15,26 +15,22 @@ import net.lzzy.sqllib.ViewHolder;
 import java.util.List;
 
 /**
- *
- * @author lzzy_gxy
- * @date 2019/4/2
+ * Created by lzzy_gxy on 2019/4/3.
  * Description:
  */
-public class CinemaOrdersFragments extends BaseFragment {
-    private static final String ARG_CINEMA_ID = "argCinemaId";
+public class CinemaOrdersFragment extends BaseFragment {
+    public static final String ARG_CINEMA_ID = "argCinemaId";
     private String cinemaId;
 
-    /** 静态方法传参数 **/
-    public static CinemaOrdersFragments newInstance(String cinemaId){
-        CinemaOrdersFragments fragment=new CinemaOrdersFragments();
+    /**静态工厂方法*/
+    public static CinemaOrdersFragment newInstance(String cinemaId){
+        CinemaOrdersFragment fragment=new CinemaOrdersFragment();
         Bundle args=new Bundle();
         args.putString(ARG_CINEMA_ID,cinemaId);
         fragment.setArguments(args);
         return fragment;
     }
 
-
-    /** 读取静态方法所传的数据 **/
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,16 +41,16 @@ public class CinemaOrdersFragments extends BaseFragment {
 
     @Override
     protected void populate() {
-        ListView lv = find(R.id.fragment_cinema_orders_lv);
-        View empty=find(R.id.fragment_cinema_orders_none);
-        lv.setEmptyView(empty);
-
+        ListView listView = find(R.id.fragment_cinemas_order_lv);
+        View none=find(R.id.fragment_cinemas_order_none);
+        listView.setEmptyView(none);
         List<Order> orders= OrderFactory.getInstance().getOrdersByCinema(cinemaId);
-        GenericAdapter<Order> adapter=new GenericAdapter<Order>(getContext(), R.layout.cinemas_item,orders) {
+        GenericAdapter<Order> adapter=new GenericAdapter<Order>(getActivity(),R.layout.order_item,orders) {
             @Override
             public void populate(ViewHolder viewHolder, Order order) {
-                viewHolder.setTextView(R.id.cinemas_items_name,order.getMovie())
-                        .setTextView(R.id.cinemas_items_location,order.getMovieTime());
+                viewHolder.setTextView(R.id.order_item_tv_movie,order.getMovie())
+                        .setTextView(R.id.order_item_tv_places,order.getMovieTime());
+
             }
 
             @Override
@@ -67,11 +63,13 @@ public class CinemaOrdersFragments extends BaseFragment {
                 return false;
             }
         };
-        lv.setAdapter(adapter);
+        listView.setAdapter(adapter);
+
+
     }
 
     @Override
-    protected int getLayoutRes() {
+    public int getLayoutRes() {
         return R.layout.fragment_cinema_orders;
     }
 
@@ -79,5 +77,4 @@ public class CinemaOrdersFragments extends BaseFragment {
     public void search(String kw) {
 
     }
-
 }

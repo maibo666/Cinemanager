@@ -12,7 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.CinemaOrdersActivity"></activity>
+        <activity
+            android:name=".activities.CinemaOrdersActivity"
+            android:label="@string/title_activity_cinema_orders"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

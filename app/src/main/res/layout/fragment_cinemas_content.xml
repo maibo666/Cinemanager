@@ -3,16 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView android:id="@+id/activity_cinema_lv"
+    <ListView android:id="@+id/activity_cinemas_lv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ListView>
+        android:layout_height="match_parent"/>
 
     <TextView android:id="@+id/activity_cinemas_tv_none"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="暂无数据，请添加数据"/>
-
-
+        android:text="@string/dialog_zoon" />
 </FrameLayout>

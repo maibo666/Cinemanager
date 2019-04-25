@@ -15,7 +15,7 @@ public class OrderFactory {
     private static OrderFactory instance;
     private SqlRepository<Order> repository;
     private OrderFactory(){
-        repository = new SqlRepository<>(AppUtils.getContext(), Order.class, DbConstants.packager);
+        repository = new SqlRepository<>(AppUtils.getContext(),Order.class, DbConstants.packager);
     }
 
     public static OrderFactory getInstance(){
@@ -36,7 +36,7 @@ public class OrderFactory {
     public List<Order> searchOrders(String kw){
         try {
             List<Order> orders =repository.getByKeyword(kw,new String[]{Order.COL_MOVIE,
-                    Order.COL_PRICE, Order.COL_MOVIE_TIME},false);
+                    Order.COL_PRICE,Order.COL_MOVIE_TIME},false);
             List<Cinema> cinemas = CinemaFactory.getInstance().searchCinemas(kw);
             if(cinemas.size()>0){
                 for(Cinema cinema:cinemas){
@@ -62,12 +62,23 @@ public class OrderFactory {
     }
 
     public boolean addOrder(Order order){
-        repository.insert(order);
-        return true;
+        try {
+            if (!isCinemaExiste(order)){
+                repository.insert(order);
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return false;
     }
 
     public boolean delete(Order order){
         repository.delete(order);
         return true;
+    }
+    private boolean isCinemaExiste(Order order){
+        return searchOrders(order.toString()).size()>0;
     }
 }

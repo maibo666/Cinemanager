@@ -1,7 +1,9 @@
 package net.lzzy.cinemanager.fragments;
 
-
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.View;
+import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,35 +18,30 @@ import net.lzzy.cinemanager.R;
 import net.lzzy.cinemanager.models.Cinema;
 import net.lzzy.cinemanager.models.CinemaFactory;
 
+import java.util.zip.Inflater;
+
 /**
- *
- * @author lzzy_gxy
- * @date 2019/3/27
+ * Created by lzzy_gxy on 2019/3/27.
  * Description:
  */
-public class AddCinemasFragment extends BaseFragment {
-    private String province="广西壮族自治区";
-    private String city="柳州市";
-    private String area="鱼峰区";
-    private TextView tvArea;
-    private EditText edtName;
-    private CinemaFactory factory;
-    /** 3.声明接口对象**/
+public class AddCinemasFragment extends BaseFragment implements View.OnClickListener {
+    private TextView region;
+    private EditText name;
+    private String provinces="广西壮族自治区";
+    private String citys="柳州市";
+    private String areas="鱼峰区";
+    private CinemaFactory cinemaFacotry;
+    private JDCityPicker jdCityPicker;
+    //3.声明接口对象
     private OnFragmentInteractionListener listener;
-    private OnCinemaCreatedListener cinemaListener;
-
-    @Override
-    protected void populate() {
-        /** 5.调用接口方法 **/
-        listener.hideSearch();
-        tvArea = find(R.id.dialog_add_tv_area);
-        edtName = find(R.id.dialog_add_cinema_edt_name);
-        showDialog();
-    }
+    //(3)声明接口对象
+    private OnCinemaCreatedListener cinemaCreate;
 
     @Override
     public int getLayoutRes() {
-        return R.layout.add_fragment_cinemas;
+        return R.layout.fragment_add_cinemas;
+
+
     }
 
     @Override
@@ -52,7 +49,71 @@ public class AddCinemasFragment extends BaseFragment {
 
     }
 
-    /** 6.若该片段被隐藏则重新调用接口方法  **/
+    @Override
+    protected void populate() {
+        listener.hideSearch();
+        getActivity().findViewById(R.id.bar_title_search).setVisibility(View.GONE);
+        region = find(R.id.dialog_tv_region);
+        find(R.id.dialog_but_preservation).setOnClickListener(this);
+        find(R.id.dialog_but_cancel).setOnClickListener( this);
+        name = find(R.id.dialog_et_name);
+        region.setOnClickListener(this);
+        initData();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.dialog_tv_region:
+                jdCityPicker.showCityPicker();
+                break;
+            case R.id.dialog_but_preservation:
+                seveCinema();
+                break;
+            case R.id.dialog_but_cancel:
+                cinemaCreate.cancelAddCinema();
+                break;
+        }
+    }
+    private void seveCinema() {
+        String address=region.getText().toString();
+        String isNmae=name.getText().toString();
+        if (address.isEmpty()||isNmae.isEmpty()){
+            Toast.makeText(getActivity(),"影院名称不能为空",Toast.LENGTH_SHORT).show();
+        }else {
+            Cinema cinema=  new Cinema(isNmae,address,provinces,citys,areas);
+            cinemaFacotry = CinemaFactory.getInstance();
+//          cinemaFacotry.addCinema(cinema);
+            cinemaCreate.saveCinema(cinema);
+            Toast.makeText(getActivity(),"添加成功",Toast.LENGTH_SHORT).show();
+
+        }
+
+
+    }
+
+    /**   仿京东地址选择*/
+    private void initData() {
+        jdCityPicker = new JDCityPicker();
+        jdCityPicker.init(getActivity());
+        jdCityPicker.setOnCityItemClickListener(new OnCityItemClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
+                provinces=province.toString();
+                citys=city.toString();
+                areas=district.getName();
+                region.setText(provinces+citys+areas);
+            }
+            @Override
+            public void onCancel() {
+                super.onCancel();
+            }
+        });
+
+    }
+
+    //6.调用方法
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -61,87 +122,31 @@ public class AddCinemasFragment extends BaseFragment {
         }
     }
 
-
-
-    private void showDialog() {
-        find(R.id.dialog_add_cinema_btn_cancel).setOnClickListener(v -> {
-                cinemaListener.cancelAddCinema();
-        });
-
-        find(R.id.dialog_add_cinema_layout_area).setOnClickListener(v -> {
-            /** 地区选择器 **/
-            showLocation();
-        });
-
-        find(R.id.dialog_add_cinema_btn_save).setOnClickListener(v -> {
-            String name=edtName.getText().toString();
-            String location=tvArea.getText().toString();
-            if (name.isEmpty()){
-                Toast.makeText(getActivity(),"影院名称不能为空",Toast.LENGTH_SHORT).show();
-            }else {
-                Cinema cinema=new Cinema();
-                cinema.setName(name);
-                cinema.setArea(area);
-                cinema.setCity(city);
-                cinema.setProvince(province);
-                cinema.setLocation(location);
-                edtName.setText("");
-                cinemaListener.saveCinema(cinema);
-               /* Cinema cinema=new Cinema(name,location,province,city,area);
-                factory = CinemaFactory.getInstance();
-                factory.addCinema(cinema);*/
-            }
-
-        });
-    }
-
-    private void showLocation() {
-        JDCityPicker cityPicker = new JDCityPicker();
-        cityPicker.init(getActivity());
-        cityPicker.setOnCityItemClickListener(new OnCityItemClickListener() {
-            @Override
-            public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
-                AddCinemasFragment.this.province=province.getName();
-                AddCinemasFragment.this.city=city.getName();
-                AddCinemasFragment.this.area=district.getName();
-                String loc=province.getName()+city.getName()+district.getName();
-                tvArea.setText(loc);
-            }
-
-            @Override
-            public void onCancel() {
-            }
-        });
-        cityPicker.showCityPicker();
-    }
-
-    /** 4.接口对象赋值 **/
+    //4(4).初始化
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             listener= (OnFragmentInteractionListener) context;
-            cinemaListener = (OnCinemaCreatedListener) context;
+            cinemaCreate= (OnCinemaCreatedListener) context;
         }catch (ClassCastException e){
-            throw new ClassCastException(context.toString()+"必须实现" +
-                    "OnFragmentInteractionListener,OnCinemaCreatedListener接口");
+            throw new ClassCastException(context.toString()
+                    +"必需实现OnFragmentInteractionListener&OnCinemaCreatedListener ");
         }
     }
-    /** 4.销毁 **/
+    //5(5).销毁
     @Override
     public void onDetach() {
         super.onDetach();
         listener=null;
-        cinemaListener =null;
+        cinemaCreate=null;
     }
 
-    /** 取消保存数据
-     * 1.声明接口 **/
-    public interface OnCinemaCreatedListener {
-        /**取消**/
+    public interface OnCinemaCreatedListener{
+        /** 取消*/
         void cancelAddCinema();
-        /**保存数据**/
-        void saveCinema(Cinema cinema);
-
+        /**保存*/
+        void  saveCinema(Cinema cinema);
     }
+
 }

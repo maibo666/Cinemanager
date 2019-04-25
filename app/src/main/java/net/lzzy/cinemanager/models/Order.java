@@ -28,23 +28,23 @@ public class Order extends BaseEntity implements Sqlitable, Parcelable {
     private float price;
     private UUID cinemaId;
 
-    public Order(){}
+    public Order(){
 
-    public Order(String movie,String movieTime,float price,UUID cinemaId){
-        super();
+    }
+    public Order(String movie,String movieTime,float price ,UUID cinemaId){
+        this.cinemaId=cinemaId;
         this.movie=movie;
         this.movieTime=movieTime;
         this.price=price;
-        this.cinemaId=cinemaId;
     }
 
     protected Order(Parcel in) {
         movie = in.readString();
         movieTime = in.readString();
         price = in.readFloat();
-        cinemaId=UUID.fromString(in.readString());
+        cinemaId=UUID.fromString(in.toString());
     }
-    /** 该字段，不需要持久化，必须加注解 **/
+
     @Ignored
     public static final Creator<Order> CREATOR = new Creator<Order>() {
         @Override
